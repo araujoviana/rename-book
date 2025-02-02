@@ -4,6 +4,10 @@ Command-line tool written in Rust that renames PDF and EPUB files to kebab-case.
 
 It takes a single file path as an argument.
 
+## Why
+
+Because I needed a quick way to organize my documents and books 🐱.
+
 ## Usage
 
 ```bash
@@ -36,3 +40,5 @@ This tool performs multiple checks to verify and process files, specifically PDF
     ```
 
 After installation, you can run `rename-book` from anywhere in your terminal.
+
+🚀
