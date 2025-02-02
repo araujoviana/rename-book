@@ -18,7 +18,8 @@ fn main() -> io::Result<()> {
     let input_path = &args[1];
     let file_path = Path::new(input_path);
 
-    if !file_path.is_file() {
+    // Validate that the given file path corresponds to an existing file.
+    if !file_path.exists() || !file_path.is_file() {
         eprintln!(
             "{} File '{}' is not a valid file path! Cancelling...",
             alert_prefix,
@@ -27,6 +28,7 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
 
+    // Extract filename and name from the given file path.
     let original_file_no_ext = match file_path.file_stem() {
         Some(name) => name,
         None => {
@@ -43,6 +45,9 @@ fn main() -> io::Result<()> {
 
     match file_extension {
         Some(extension) if extension == "pdf" || extension == "epub" => {
+            /* Generate a renamed filename by converting the original stem
+             * to kebab case and appending the extension
+             */
             let renamed_file_stem = original_file_stem.to_kebab_case();
             let renamed_file_name = format!("{}.{}", renamed_file_stem, extension);
 
@@ -54,6 +59,7 @@ fn main() -> io::Result<()> {
                 return Ok(());
             }
 
+            // Join the parent directory with the new file name to create a new path
             let parent_directory = file_path.parent().unwrap_or_else(|| Path::new("./"));
             let new_file_path = parent_directory.join(&renamed_file_name);
 
@@ -63,17 +69,21 @@ fn main() -> io::Result<()> {
                 new_file_path.display()
             );
 
+            // Rename a file at the specified path to a new file path.
             match fs::rename(file_path, &new_file_path) {
-                Ok(_) => println!(
-                    "File renamed successfully to '{}'",
-                    new_file_path.display().to_string().green().bold()
-                ),
+                Ok(_) => {
+                    println!(
+                        "File renamed successfully to '{}'",
+                        new_file_path.display().to_string().green().bold()
+                    );
+                }
                 Err(error) => {
                     eprintln!("{} renaming file: {}", alert_prefix, error);
                     return Err(error);
                 }
             }
         }
+        // Ignores anything that's not a .pdf or .epub
         Some(_) => {
             println!(
                 "Ignoring non-book '{}' (only pdfs and epubs are processed).",
