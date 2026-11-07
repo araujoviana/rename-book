@@ -1,3 +1,5 @@
+> 📦 **Archived (November 2026).** A small Rust CLI that renames PDF and EPUB files to kebab-case (February 2025). Kept as a read-only record of what I was working on at the time; it is no longer maintained.
+
 # rename-book
 
 Command-line tool written in Rust that renames PDF and EPUB files to kebab-case.
